@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Cel-Far</string>
+    <string name="tvIntro">Hello, you can use this application to check your skills on temperature conversion, or calculate the correct value</string>
+    <string name="radioButtonCheck">Check</string>
+    <string name="radioButtonCalculate">Calculate</string>
+    <string name="goButton">Go!</string>
+    <string name="Farenheit">Farenheit</string>
+    <string name="Celcius">Celcius</string>
+    <string name="returnButton">Return</string>
+</resources>
