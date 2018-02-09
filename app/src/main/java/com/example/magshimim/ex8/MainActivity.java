@@ -1,77 +1,181 @@
 package com.example.magshimim.ex8;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 public class MainActivity extends Activity {
-    RadioButton rad;
+    EditText field1;
+    EditText field2;
+    Button go;
+    final int CHECK = 1;
+    RadioButton rCa;
+    RadioButton rCh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        field1 = (EditText)findViewById(R.id.input1);
+        field2 = (EditText)findViewById(R.id.input2);
+        rCa = (RadioButton) findViewById(R.id.calc);
+        rCh = (RadioButton) findViewById(R.id.right);
+        go = (Button) findViewById(R.id.bGo);
+        go.setEnabled(false);
+        field1.setEnabled(false);
+        field2.setEnabled(false);
+        field1.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
+                if(rCa != null && rCa.isChecked() && field1.getText().toString().length() >0)
+                {
+                    field2.setEnabled(false);
+                    go.setEnabled(true);
+                }
+                else if(rCa != null && rCa.isChecked() && field1.getText().toString().length() == 0)
+                {
+                    field2.setEnabled(true);
+                    go.setEnabled(false);
+                }
+                else if(rCh != null && rCh.isChecked()  && field1.getText().toString().length() >0 && field2.getText().toString().length() >0)
+                {
+                    go.setEnabled(true);
+                }
+                else if(rCh != null && rCh.isChecked()  && (field1.getText().toString().length() ==0 || field2.getText().toString().length() ==0))
+                {
+                    go.setEnabled(false);
+                }
+                else
+                {
+                    go.setEnabled(false);
+                }
+            }
+        });
+
+        field2.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
+                if(rCa != null && rCa.isChecked() && field2.getText().toString().length() >0)
+                {
+                    field1.setEnabled(false);
+                    go.setEnabled(true);
+                }
+                else if(rCa != null && rCa.isChecked() && field1.getText().toString().length() == 0)
+                {
+                    field1.setEnabled(true);
+                    go.setEnabled(false);
+                }
+                else if(rCh != null && rCh.isChecked()  && field1.getText().toString().length() >0 && field2.getText().toString().length() >0)
+                {
+                    go.setEnabled(true);
+                }
+                else if(rCh != null && rCh.isChecked()  && (field1.getText().toString().length() ==0 || field2.getText().toString().length() ==0))
+                {
+                    go.setEnabled(false);
+                }
+                else
+                {
+                    go.setEnabled(false);
+                }
+            }
+        });
+
+    }
+
+    public void onRadioButtonClicked(View view) {
+// Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+        if(checked) {
+            field1.setEnabled(true);
+            field2.setEnabled(true);
+        }
+        else
+        {
+            field1.setEnabled(false);
+            field2.setEnabled(false);
+        }
+    }
+    public void sendMessage(View view)
+    {
+        Intent intent = new Intent(this, Main2Activity.class);
+        EditText editText1 = (EditText) findViewById(R.id.input1);
+        EditText editText2 = (EditText) findViewById(R.id.input2);
+        if(editText1.getText() != null) {
+            String val1 = editText1.getText().toString();
+            intent.putExtra("far", val1);
+        }
+        else
+        {
+            intent.putExtra("far", "");
+        }
+        if(editText1.getText() != null) {
+            String val2 = editText2.getText().toString();
+            intent.putExtra("cel", val2);
+        }
+        else
+        {
+            intent.putExtra("cel", "");
+        }
+
+
+
+
+        if(rCh.isChecked())
+        {
+            intent.putExtra("check", "rch");
+        }
+        else
+        {
+            intent.putExtra("check", "rca");
+        }
+        startActivityForResult(intent, CHECK);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(!rCh.isChecked()) {
+            EditText editText;
+            if (data.getStringExtra("empty").compareTo("cel") == 0) {
+                editText = (EditText) findViewById(R.id.input2);
+            } else {
+                editText = (EditText) findViewById(R.id.input1);
+            }
+
+            if (requestCode == CHECK) {
+                editText.setText(data.getStringExtra("back"));
+            }
+        }
+
     }
 }
-/*
-<RadioButton
-            android:id="@+id/rbCheck"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/tvIntro"
-            android:layout_marginStart="41dp"
-            android:layout_marginTop="61dp"
-            android:text="@string/radioButtonCheck" />
-
-        <RadioButton
-            android:id="@+id/rbCalculate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/rbCheck"
-            android:layout_alignBottom="@+id/rbCheck"
-            android:layout_centerHorizontal="true"
-            android:text="@string/radioButtonCalculate" />
-
-            <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/"
-            android:text="@string/Farenheit"/>
- */
-
-/*
-<EditText
-            android:id="@+id/etFarenheit"
-            android:layout_width="112dp"
-            android:layout_height="wrap_content"
-
-            android:layout_weight="1"
-            android:ems="10"
-            android:inputType="number" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/tvFarenheit"
-            android:text="@string/Farenheit" />
-
-        <Button
-            android:id="@+id/btGo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:layout_weight="1"
-            android:text="@string/goButton" />
 
 
-        <EditText
-            android:id="@+id/etCelcius"
-            android:layout_width="118dp"
-            android:layout_height="wrap_content"
 
-            android:layout_weight="1"
-            android:ems="10"
-            android:inputType="numberDecimal" />
- */
+
+
+
